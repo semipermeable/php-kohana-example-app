@@ -69,10 +69,33 @@ I18n::lang('en-us');
  * Note: If you supply an invalid environment name, a PHP warning will be thrown
  * saying "Couldn't find constant Kohana::<INVALID_ENV_NAME>"
  */
-if (isset($_SERVER['KOHANA_ENV']))
-{
-	Kohana::$environment = constant('Kohana::'.strtoupper($_SERVER['KOHANA_ENV']));
+// set a default value, for local development
+$env = Kohana::DEVELOPMENT;
+
+if (!empty($_SERVER['HTTP_HOST']) && isset($_SERVER['DEP_NAME'])) {
+    $parts = explode('/', $_SERVER['DEP_NAME']);
+    $environment = $parts[count($parts)-1];
+    switch($environment) {
+        case 'dev':
+        case 'develop':
+        case 'development':
+            $env = Kohana::DEVELOPMENT;
+            break;
+        case 'test':
+        case 'testing':
+            $env = Kohana::TESTING;
+            break;
+        case 'stage':
+        case 'staging':
+            $env = Kohana::STAGING;
+            break;
+        case 'default':
+        case 'production':
+        default:
+            $env = Kohana::PRODUCTION;
+    }
 }
+Kohana::$environment = $env;
 
 /**
  * Initialize Kohana, setting the default options.
@@ -94,9 +117,10 @@ Kohana::init(array(
 ));
 
 /**
- * Attach the file write to logging. Multiple writers are supported.
+ * Attach the syslog write to logging. Multiple writers are supported.
  */
-Kohana::$log->attach(new Log_File(APPPATH.'logs'));
+$syslogwriter = new Log_Syslog();
+Kohana::$log->attach($syslogwriter);
 
 /**
  * Attach a file reader to config. Multiple readers are supported.
@@ -110,7 +134,7 @@ Kohana::modules(array(
 	// 'auth'       => MODPATH.'auth',       // Basic authentication
 	// 'cache'      => MODPATH.'cache',      // Caching with multiple backends
 	// 'codebench'  => MODPATH.'codebench',  // Benchmarking tool
-	// 'database'   => MODPATH.'database',   // Database access
+	   'database'   => MODPATH.'database',   // Database access
 	// 'image'      => MODPATH.'image',      // Image manipulation
 	// 'minion'     => MODPATH.'minion',     // CLI Tasks
 	// 'orm'        => MODPATH.'orm',        // Object Relationship Mapping
@@ -129,3 +153,13 @@ Route::set('default', '(<controller>(/<action>(/<id>)))')
 	));
 
 Cookie::$salt = 'n0LaV67)a5N@NxUkf1QHTO%m%ScvT01l$piX7!st';
+
+Session::$default = 'database';
+
+/**
+ * include an environment based bootstrap configuration
+ */
+$env_bootstrap = sprintf('%s%s_bootstrap.php', APPPATH, $env);
+if(is_file($env_bootstrap)){
+    require $env_bootstrap;
+}

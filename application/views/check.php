@@ -1,0 +1,26 @@
+<?php if (!defined('SYSPATH')) exit('No direct script access allowed'); ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title><?php echo $title; ?></title>
+</head>
+<body>
+    <div>
+        <h2>Session Test</h2>
+        Visits: <?php echo $visits; ?>
+    </div>
+    <div>
+        <h2>Environment Test</h2>
+        Current Environment: <?php echo $environment[0]; ?> (<?php echo $environment[1]; ?>) 
+    </div>
+    <div>
+        <h2>Logentry Test</h2>
+        <?php echo Form::open(''); ?>
+        <?php echo Form::label('logentry_message', 'Logentry');?>
+        <?php echo Form::input('logentry_message', 'Add a logentry'); ?>
+        <?php echo Form::submit('logentry_submit', 'Send it!'); ?>
+        <?php echo Form::close(); ?>
+    </div>
+</body>
+</html>
