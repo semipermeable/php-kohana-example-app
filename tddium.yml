@@ -1,5 +1,5 @@
 :tddium:
   :hooks:
-    :pre:  'wget http://pear.php.net/go-pear.phar && php go-pear.phar && pear channel-discover pear.phing.info && pear install phing/phing && phpenv rehash && composer install'
+    :pre:  'setup'
   :tests:
     - phing test
