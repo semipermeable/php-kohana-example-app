@@ -2,4 +2,4 @@
   :hooks:
     :pre:  'bin/setup'
   :tests:
-    - phing test
+    - env PATH=$HOME/local:$PATH phing test

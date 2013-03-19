@@ -1,13 +1,14 @@
 #!/bin/bash
 set -e
-wget http://www.php.net/get/php-5.4.13.tar.bz2/from/a/mirror
-mkdir local
+wget http://www.php.net/get/php-5.4.13.tar.bz2/from/us1.php.net/mirror -O php-5.4.13.tar.bz2
+mkdir -p $HOME/local
 tar jxvf php-5.4.13.tar.bz2
 cd php-5*
 ./configure --prefix=$HOME/local
 make
 make install
 cd ..
+export PATH=$HOME/local:$PATH
 wget http://pear.php.net/go-pear.phar 
 php go-pear.phar
 pear channel-discover pear.phing.info
