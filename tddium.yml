@@ -1,5 +1,5 @@
 :tddium:
   :hooks:
-    :pre:  'setup'
+    :pre:  'bin/setup'
   :tests:
     - phing test
